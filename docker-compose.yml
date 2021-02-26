@@ -1,0 +1,27 @@
+version: '3.3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  rails:
+    build:
+      context: .
+      dockerfile: ./compose/rails/Dockerfile
+    depends_on:
+        - postgres
+    volumes:
+      - ./rails-backend:/app
+    env_file:
+      - ./.envs/.rails
+      - ./.envs/.postgres
+    ports:
+      - "3000:3000"
+    command: /app/start
+
+  postgres:
+    image: postgres:12.3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.postgres
