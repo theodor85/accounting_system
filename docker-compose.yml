@@ -17,7 +17,7 @@ services:
       - ./.envs/.postgres
     ports:
       - "3000:3000"
-    command: /app/start
+    command: /start
 
   postgres:
     image: postgres:12.3
