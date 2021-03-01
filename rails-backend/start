@@ -1,4 +1,7 @@
 #!/bin/bash
 
 rm -rf /app/tmp/pids
+
+export PATH=/node_modules/yarn/bin:$PATH
+
 /app/bin/rails server -b 0.0.0.0 -p 3000
