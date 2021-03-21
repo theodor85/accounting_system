@@ -25,6 +25,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - ./.envs/.postgres
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis:6.2.1
