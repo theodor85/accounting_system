@@ -10,9 +10,7 @@ RUN apt-get install libpq-dev -y
 
 WORKDIR /app
 
-COPY ./rails-backend/Gemfile /app/Gemfile
 RUN gem install bundler
-RUN bundle
 
 COPY  ./rails-backend/start /start
 RUN chmod +x /start
