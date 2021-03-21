@@ -4,6 +4,7 @@ RUN apt-get update
 
 RUN apt-get install nodejs npm -y
 RUN npm install yarn
+ENV PATH="/node_modules/yarn/bin:${PATH}"
 
 # pg gem`s dependencies
 RUN apt-get install libpq-dev -y
