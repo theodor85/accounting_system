@@ -3,6 +3,7 @@ FROM ruby:3.0.0-slim-buster
 RUN apt-get update
 
 RUN apt-get install nodejs npm -y
+RUN apt-get install shared-mime-info -y
 RUN npm install yarn
 ENV PATH="/node_modules/yarn/bin:${PATH}"
 
