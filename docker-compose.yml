@@ -23,6 +23,7 @@ services:
     image: postgres:12.3
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./stored_procedures:/stored_procedures
     env_file:
       - ./.envs/.postgres
     ports:
