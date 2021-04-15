@@ -9,18 +9,16 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_CREATE_REF(ref_name varchar, fields json) RETURNS text AS $$
 DECLARE
-  length int;
   create_command text;
   field_name text;
   field_type text;
+  fields_cursor CURSOR FOR SELECT * from json_array_elements(fields);
 BEGIN
 
-  length := json_array_length(fields);
-
   create_command := format('create table %s (id serial ', ref_name);
-  FOR i IN 0..length-1 LOOP
-    field_name := (fields::json->>i)::json->>'name';
-    field_type := CONVERT_TYPE((fields::json->>i)::json->>'type');
+  FOR field IN fields_cursor LOOP
+    field_name := field.value::json->>'name';
+    field_type := CONVERT_TYPE(field.value::json->>'type');
     create_command := create_command || format(', %s %s', field_name, field_type);
   END LOOP;
   create_command := create_command || ');';
