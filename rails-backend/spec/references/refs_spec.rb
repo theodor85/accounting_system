@@ -1,30 +1,25 @@
 require 'rails_helper'
-require './metadata_objects/reference.rb'
-require './database_classes/table.rb'
+require './metadata_objects/reference'
+require './database_classes/table'
 
 RSpec.describe Reference do
 
-  TABLE_NAME = 'Anything'
+  REF_NAME = 'Anything'
 
   after(:each) do
-    Table.new(TABLE_NAME).drop
+    Table.new(REF_NAME).drop
   rescue UndefinedTable
-    puts "Таблица #{TABLE_NAME} не найдена"
-  end
-
-  it "can create database table" do
-    Reference.new(TABLE_NAME).create
-    expect(Table.new(TABLE_NAME).exists?).to be true
+    puts "Таблица #{REF_NAME} не найдена"
   end
 
   it "can create database table with columns" do
-    new_ref = Reference.new(TABLE_NAME)
+    new_ref = Reference.new(REF_NAME)
     new_ref.add_field(name: 'customer', type: 'string')
     new_ref.add_field(name: 'amount', type: 'number')
     new_ref.add_field(name: 'description', type: 'text')
     new_ref.create
 
-    table = Table.new(TABLE_NAME)
+    table = Table.new(REF_NAME)
     expect(table.exists?).to                       be true
     expect(table.has_column?('customer')).to       be true
     expect(table.has_column?('amount')).to         be true
@@ -32,4 +27,30 @@ RSpec.describe Reference do
     expect(table.type_of_column('amount')).to      eq('numeric')
     expect(table.type_of_column('description')).to eq('text')
   end
+
+  # it "can read metadata from database" do
+  #   new_ref = Reference.new(REF_NAME)
+  #   new_ref.add_field(name: 'customer', type: 'string')
+  #   new_ref.add_field(name: 'amount', type: 'number')
+  #   new_ref.add_field(name: 'description', type: 'text')
+  #   new_ref.create
+
+  #   check_ref = Reference.new(REF_NAME)
+
+  #   expect(check_ref.ref_name).to  eq(REF_NAME)
+  #   expect(check_ref.fields[0]['name']).to eq('customer')
+  #   expect(check_ref.fields[0]['type']).to eq('string')
+  #   expect(check_ref.fields[1]['name']).to eq('amount')
+  #   expect(check_ref.fields[1]['type']).to eq('number')
+  #   expect(check_ref.fields[2]['name']).to eq('description')
+  #   expect(check_ref.fields[2]['type']).to eq('text')
+  # end
+
+  # it "can read update metadata" do
+  #   new_ref = Reference.new(REF_NAME)
+  #   new_ref.add_field(name: 'customer', type: 'string')
+  #   new_ref.add_field(name: 'amount', type: 'number')
+  #   new_ref.add_field(name: 'description', type: 'text')
+  #   new_ref.create
+  # end
 end

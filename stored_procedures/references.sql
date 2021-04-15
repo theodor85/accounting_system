@@ -1,5 +1,14 @@
 CREATE OR REPLACE FUNCTION CREATE_REFERENCE(ref_name varchar, fields json) RETURNS void AS $$
 DECLARE
+BEGIN
+  EXECUTE BUILD_COMMAND_FOR_CREATE_REF(ref_name, fields);
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_CREATE_REF(ref_name varchar, fields json) RETURNS text AS $$
+DECLARE
   length int;
   create_command text;
   field_name text;
@@ -16,7 +25,7 @@ BEGIN
   END LOOP;
   create_command := create_command || ');';
 
-  EXECUTE create_command;
+  RETURN create_command;
 END;
 $$
 LANGUAGE plpgsql;
