@@ -19,9 +19,13 @@ class Reference
   def create
     query = "
       SELECT
-        create_reference('#{@ref_name}'::text, '#{@fields.to_json}'::json);
+        create_reference($1::text, $2::json);
     "
-    @connection.exec(query)
+    params = [
+      @ref_name,
+      @fields.to_json,
+    ]
+    @connection.exec_params(query, params)
   end
 
   def add_field(name:, type:)
