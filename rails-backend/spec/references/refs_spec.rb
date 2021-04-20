@@ -2,24 +2,27 @@ require 'rails_helper'
 require './metadata_objects/reference'
 require './database_classes/table'
 
-RSpec.describe Reference do
+RSpec.describe ::Metadata::References::Reference do
 
   REF_NAME = 'Anything'
 
   after(:each) do
-    Table.new(REF_NAME).drop
+    ::Database::Table.new(REF_NAME).drop
   rescue UndefinedTable
     puts "Таблица #{REF_NAME} не найдена"
   end
 
   it "can create database table with columns" do
-    new_ref = Reference.new(REF_NAME)
+    
+    # include ::Metadata::References
+    
+    new_ref = ::Metadata::References::Reference.new(REF_NAME)
     new_ref.add_field(name: 'customer', type: 'string')
     new_ref.add_field(name: 'amount', type: 'number')
     new_ref.add_field(name: 'description', type: 'text')
     new_ref.create
 
-    table = Table.new(REF_NAME)
+    table = ::Database::Table.new(REF_NAME)
     expect(table.exists?).to                       be true
     expect(table.has_column?('customer')).to       be true
     expect(table.has_column?('amount')).to         be true
