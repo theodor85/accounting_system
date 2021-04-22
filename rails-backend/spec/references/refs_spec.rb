@@ -4,56 +4,35 @@ require './database_classes/table'
 
 RSpec.describe ::Metadata::References::Reference do
 
-  REF_NAME = 'Anything'
+  REF_NAME = 'Test reference'
 
-  after(:each) do
-    ::Database::Table.new(REF_NAME).drop
-  rescue UndefinedTable
-    puts "Таблица #{REF_NAME} не найдена"
+  before(:all) do
+    create_test_database(ENV['POSTGRES_DB_TEST'])
   end
 
-  it "can create database table with columns" do
-    
+  after(:all) do
+    remove_test_database(ENV['POSTGRES_DB_TEST'])
+  end
+
+  it 'can create reference and fetch metadata' do
+
     # include ::Metadata::References
-    
-    new_ref = ::Metadata::References::Reference.new(REF_NAME)
-    new_ref.add_field(name: 'customer', type: 'string')
-    new_ref.add_field(name: 'amount', type: 'number')
-    new_ref.add_field(name: 'description', type: 'text')
-    new_ref.create
 
-    table = ::Database::Table.new(REF_NAME)
-    expect(table.exists?).to                       be true
-    expect(table.has_column?('customer')).to       be true
-    expect(table.has_column?('amount')).to         be true
-    expect(table.type_of_column('customer')).to    eq('character varying')
-    expect(table.type_of_column('amount')).to      eq('numeric')
-    expect(table.type_of_column('description')).to eq('text')
+    ref1 = ::Metadata::References::Reference.new(REF_NAME)
+    ref1.add_field(name: 'customer', type: 'string')
+    ref1.add_field(name: 'amount', type: 'number')
+    ref1.add_field(name: 'description', type: 'text')
+    ref1.create
+
+    ref2 = ::Metadata::References::Reference.new(REF_NAME)
+    ref2.refresh
+
+    expect(ref1.ref_name).to             eq(ref2.ref_name)
+    expect(ref1.fields[0]['name']).to    eq(ref2.fields[0]['name'])
+    expect(ref1.fields[0]['type']).to    eq(ref2.fields[0]['type'])
+    expect(ref1.fields[1]['name']).to    eq(ref2.fields[1]['name'])
+    expect(ref1.fields[1]['type']).to    eq(ref2.fields[1]['type'])
+    expect(ref1.fields[2]['name']).to    eq(ref2.fields[2]['name'])
+    expect(ref1.fields[2]['type']).to    eq(ref2.fields[2]['type'])
   end
-
-  # it "can read metadata from database" do
-  #   new_ref = Reference.new(REF_NAME)
-  #   new_ref.add_field(name: 'customer', type: 'string')
-  #   new_ref.add_field(name: 'amount', type: 'number')
-  #   new_ref.add_field(name: 'description', type: 'text')
-  #   new_ref.create
-
-  #   check_ref = Reference.new(REF_NAME)
-
-  #   expect(check_ref.ref_name).to  eq(REF_NAME)
-  #   expect(check_ref.fields[0]['name']).to eq('customer')
-  #   expect(check_ref.fields[0]['type']).to eq('string')
-  #   expect(check_ref.fields[1]['name']).to eq('amount')
-  #   expect(check_ref.fields[1]['type']).to eq('number')
-  #   expect(check_ref.fields[2]['name']).to eq('description')
-  #   expect(check_ref.fields[2]['type']).to eq('text')
-  # end
-
-  # it "can read update metadata" do
-  #   new_ref = Reference.new(REF_NAME)
-  #   new_ref.add_field(name: 'customer', type: 'string')
-  #   new_ref.add_field(name: 'amount', type: 'number')
-  #   new_ref.add_field(name: 'description', type: 'text')
-  #   new_ref.create
-  # end
 end
