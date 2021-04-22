@@ -15,6 +15,9 @@ RSpec.describe ::Metadata::References::Reference do
   end
 
   it 'can create reference and fetch metadata' do
+
+    # include ::Metadata::References
+
     ref1 = ::Metadata::References::Reference.new(REF_NAME)
     ref1.add_field(name: 'customer', type: 'string')
     ref1.add_field(name: 'amount', type: 'number')
