@@ -12,6 +12,7 @@ services:
         - postgres
     volumes:
       - ./rails-backend:/app
+      - ./stored_procedures:/stored_procedures
     env_file:
       - ./.envs/.rails
       - ./.envs/.postgres

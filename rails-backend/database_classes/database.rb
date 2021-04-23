@@ -3,14 +3,9 @@ require 'pg'
 
 module Database
   class Database
-    def initialize(name)
+    def initialize(name, connection)
       @name = name.downcase
-      @connection = PG.connect(
-        dbname: ENV['POSTGRES_DB'],
-        user: ENV['POSTGRES_USER'],
-        password: ENV['POSTGRES_PASSWORD'],
-        host: ENV['POSTGRES_HOST'],
-      )
+      @connection = connection
     end
 
     def create
