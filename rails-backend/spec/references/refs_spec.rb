@@ -17,8 +17,6 @@ RSpec.describe ::Metadata::References::Reference do
 
   it 'can create reference and fetch metadata' do
 
-    # include ::Metadata::References
-
     connection = ::Database::Connection.new.get_test_connection
     ref1 = ::Metadata::References::Reference.new(REF_NAME, connection)
     ref1.add_field(name: 'customer', type: 'string')
