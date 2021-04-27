@@ -4,20 +4,18 @@ require 'pg'
 module Database
   class Database
     def initialize(name, connection)
-      @name = name.downcase
       @connection = connection
+      @name = @connection.quote_ident(name.downcase)
     end
 
     def create
-      query = "CREATE DATABASE $1;"
-      params = [@name]
-      @connection.exec_params(query, params)
+      query = "CREATE DATABASE #{@name};"
+      @connection.exec(query)
     end
 
     def drop
-      query = "DROP DATABASE $1;"
-      params = [@name]
-      @connection.exec_params(query, params)
+      query = "DROP DATABASE #{@name};"
+      @connection.exec(query)
     end
   end
 end

@@ -21,7 +21,7 @@ module DatabaseHelper
 
   def apply_sql_scripts(connection)
     stored_procedures_dir = Pathname.new("/stored_procedures")
-    Dir.foreach(stored_procedures_dir.to_s) do |item|
+    Dir.each_child(stored_procedures_dir.to_s) do |item|
       sql_file = stored_procedures_dir + Pathname.new(item)
 
       connection.exec(
@@ -32,11 +32,30 @@ module DatabaseHelper
 
   def remove_test_database()
     connection = ::Database::Connection.new.get_connection
+
+    close_all_connections(ENV['POSTGRES_DB_TEST'], connection)
+
     db = ::Database::Database.new(
       ENV['POSTGRES_DB_TEST'],
       connection,
     )
     db.drop
     connection.close
+  end
+
+  def close_all_connections(database_name, connection)
+    query = "
+      SELECT 
+        pg_terminate_backend(pid) 
+      FROM 
+        pg_stat_activity 
+      WHERE 
+        -- don't kill my own connection!
+        pid <> pg_backend_pid()
+        -- don't kill the connections to other databases
+        AND datname = '#{database_name}'
+      ;
+    "
+    connection.exec(query)
   end
 end
