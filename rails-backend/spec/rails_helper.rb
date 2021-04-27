@@ -1,6 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'helpers/database_helper'
+require 'helpers/stored_proc_helper'
+require 'helpers/reference_helper'
 
 ENV['RAILS_ENV'] ||= 'test'
 
@@ -64,4 +66,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include DatabaseHelper
+  config.include StoredProcHelper
+  config.include ReferenceHelper
 end

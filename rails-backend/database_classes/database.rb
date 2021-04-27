@@ -1,6 +1,3 @@
-require 'pg'
-
-
 module Database
   class Database
     def initialize(name, connection)

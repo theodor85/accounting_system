@@ -48,7 +48,6 @@ module Database
         return result[0].values_at('data_type')[0]
       end
     end
-
   end
 
   class UndefinedTable < StandardError

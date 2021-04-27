@@ -29,6 +29,16 @@ $$
 LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_CHANGE_METADATA(
+  ref_name varchar, fields json) RETURNS text AS $$
+DECLARE
+BEGIN
+
+END
+$$
+LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION CONVERT_TYPE(type_name text) RETURNS text AS $$
 DECLARE
   output_type text;

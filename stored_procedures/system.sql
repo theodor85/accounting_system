@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS md_refs  (
 -- поля для справочников
 CREATE TABLE IF NOT EXISTS md_refs_fields  (
     id serial PRIMARY KEY,
-    name varchar(100),
     ref int,
+    name varchar(100),
     type varchar(50),
     CONSTRAINT fk_ref
       FOREIGN KEY (ref) REFERENCES md_refs (id)
