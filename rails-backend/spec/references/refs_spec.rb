@@ -26,7 +26,7 @@ RSpec.describe 'Reference testing: ' do
       ref1.add_field(name: 'description', type: 'text')
       ref1.create
   
-      ref2 = ::Metadata::References::Reference.new(REF_NAME)
+      ref2 = ::Metadata::References::Reference.new(REF_NAME, @connection)
       ref2.refresh
   
       expect(ref1.ref_name).to             eq(ref2.ref_name)

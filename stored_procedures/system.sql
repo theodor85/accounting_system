@@ -37,3 +37,6 @@ CREATE TABLE IF NOT EXISTS md_refs_fields  (
       ON DELETE RESTRICT
       ON UPDATE CASCADE
 );
+
+-- последовательность для номеров таблиц справочников
+CREATE SEQUENCE ref_tables;

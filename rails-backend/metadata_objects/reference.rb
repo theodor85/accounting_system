@@ -14,18 +14,27 @@ module Metadata
 
       def create
         query = "
-          SELECT
-            create_reference($1::text, $2::json);
+          CALL create_reference($1::text, $2::json);
         "
         params = [
           @ref_name,
           @fields.to_json
         ]
         @connection.exec_params(query, params)
+      rescue PG::RaiseException => e
+        raise CreatingReferenceException.new(
+          "Error while reference creating. Message: #{e.message}"
+        )
       end
 
       def add_field(name:, type:)
         @fields << { name: name, type: type }
+      end
+    end
+
+    class CreatingReferenceException < StandardError
+      def initialize(msg="Error while reference creating")
+        super
       end
     end
   end

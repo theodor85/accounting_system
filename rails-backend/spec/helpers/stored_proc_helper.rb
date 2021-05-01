@@ -6,8 +6,7 @@ module StoredProcHelper
     connection = ::Database::Connection.new.get_test_connection
     
     query = "
-      SELECT
-        create_reference($1::text, $2::json);
+      CALL create_reference($1::text, $2::json);
     "
     params = [
       ref_name,

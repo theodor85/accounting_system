@@ -12,7 +12,7 @@ module ReferenceHelper
     "
     answer = false
     @connection.exec(query) do |result|
-      answer = result[0].values_at('count') >= 1
+      answer = result[0].values_at('count')[0].to_i >= 1
     end
 
     connection.close
@@ -33,9 +33,9 @@ module ReferenceHelper
     @connection.exec(query) do |result|
       i = 0
       fields.each do |field|
-        answer = result[i].values_at('ref_name') == ref_name &&
-           field.name == result[i].values_at('name') &&
-           field.type == result[i].values_at('type')
+        answer = result[i].values_at('ref_name')[0] == ref_name &&
+           field[:name] == result[i].values_at('name')[0] &&
+           field[:type] == result[i].values_at('type')[0]
         # break immediatly if false
         if not answer then
           return false
