@@ -57,8 +57,9 @@ DECLARE
   field_name text;
   field_type text;
 BEGIN
+  command := '';
   FOR field IN fields_cursor LOOP
-    command := 'INSERT INTO md_refs_fields (ref, name, type) VALUES (';
+    command := command || 'INSERT INTO md_refs_fields (ref, name, type) VALUES (';
     field_name := field.value::json->>'name';
     field_type := CONVERT_TYPE(field.value::json->>'type');
     command := command || format('%s, %L, %L); ', ref_id, field_name, field_type);

@@ -27,20 +27,18 @@ module ReferenceHelper
       FROM md_refs_fields
       JOIN md_refs as refs
       ON md_refs_fields.ref = refs.id
-      WHERE refs.ref_name='#{ref_name}';
+      WHERE refs.ref_name='#{ref_name}'
+      ORDER BY name ASC;
     "
-    answer = false
-    @connection.exec(query) do |result|
-      i = 0
-      fields.each do |field|
-        answer = result[i].values_at('ref_name')[0] == ref_name &&
-           field[:name] == result[i].values_at('name')[0] &&
-           field[:type] == result[i].values_at('type')[0]
-        # break immediatly if false
-        if not answer then
-          return false
-        end
-        i += 1
+
+    sorted_fields = fields.sort{|a, b| a[:name] <=> b[:name]}
+
+    answer = @connection.exec(query) do |result|
+      sorted_fields.each_with_index.all? do |field, i|
+        binding.pry
+        result[i].values_at('ref_name')[0] == ref_name &&
+          field[:name] == result[i].values_at('name')[0] &&
+          field[:type] == result[i].values_at('type')[0]
       end
     end
 
