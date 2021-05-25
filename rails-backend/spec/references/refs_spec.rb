@@ -58,7 +58,7 @@ RSpec.describe 'Reference testing: ' do
       expect(is_fields_in_md_refs_fields?(ref_name, fields)).to  be true
 
       # добавлена таблица c нужными полями?
-      table = ::Database::Table.new(get_ref_table_name(ref_name))
+      table = ::Database::Table.new(get_ref_table_name(ref_name), @connection)
       expect(table.exists?).to                       be true
       expect(table.has_column?('customer')).to       be true
       expect(table.has_column?('amount')).to         be true

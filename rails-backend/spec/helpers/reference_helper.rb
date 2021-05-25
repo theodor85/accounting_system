@@ -35,7 +35,6 @@ module ReferenceHelper
 
     answer = @connection.exec(query) do |result|
       sorted_fields.each_with_index.all? do |field, i|
-        binding.pry
         result[i].values_at('ref_name')[0] == ref_name &&
           field[:name] == result[i].values_at('name')[0] &&
           field[:type] == result[i].values_at('type')[0]
@@ -55,9 +54,7 @@ module ReferenceHelper
       WHERE ref_name = '#{ref_name}';
     "
     table_name = @connection.exec(query) do |result|
-      result[0].values_at('table_name')
+      result[0].values_at('table_name')[0]
     end
-
-    return table_name
   end
 end
