@@ -159,3 +159,75 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE DELETE_REFERENCE(reference_name text) AS $$
+DECLARE
+  command_delete_md_ref text;
+  command_delete_md_ref_fields text;
+  command_delete_table text;
+
+  error_message text;
+  error_number text;
+BEGIN
+
+  command_delete_table := BUILD_COMMAND_FOR_DELETE_TABLE(
+    GET_REF_TABLE_NAME(reference_name)
+  );
+  command_delete_md_ref_fields := BUILD_COMMAND_FOR_DELETE_REF_FIELDS(
+    GET_REF_ID_BY_NAME(reference_name)
+  );
+  command_delete_md_ref := BUILD_COMMAND_FOR_DELETE_MD_REF(reference_name);
+
+  EXECUTE command_delete_table;
+  EXECUTE command_delete_md_ref_fields;
+  EXECUTE command_delete_md_ref;
+
+EXCEPTION
+  WHEN others THEN
+    ROLLBACK;
+    GET STACKED DIAGNOSTICS error_message = MESSAGE_TEXT,
+                            error_number = RETURNED_SQLSTATE;
+    RAISE EXCEPTION 'Message: % |***| Error code: %',
+                            error_message, error_number;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_DELETE_TABLE(table_name varchar) RETURNS text AS $$
+BEGIN
+  RETURN format('DROP TABLE %s;', table_name);
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_DELETE_REF_FIELDS(ref_id int) RETURNS text AS $$
+BEGIN
+  RETURN format('DELETE FROM md_refs_fields WHERE id=%s;', ref_id);
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION GET_REF_ID_BY_NAME(reference_name text) RETURNS int AS $$
+DECLARE
+    ref_id text;
+BEGIN
+  SELECT id
+  INTO ref_id
+  FROM md_refs
+  WHERE ref_name=reference_name;
+  RETURN ref_id;
+END
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION BUILD_COMMAND_FOR_DELETE_MD_REF(reference_name text) RETURNS text AS $$
+BEGIN
+  RETURN format('DELETE FROM md_refs WHERE ref_name=%L;', reference_name);
+END;
+$$
+LANGUAGE plpgsql;

@@ -16,9 +16,7 @@ module Metadata
       end
 
       def create
-        query = "
-          CALL create_reference($1::text, $2::json);
-        "
+        query = "CALL create_reference($1::text, $2::json);"
         params = [
           @ref_name,
           @fields.to_json
@@ -35,12 +33,8 @@ module Metadata
       end
 
       def fetch
-        query = "
-          SELECT get_reference($1::text);
-        "
-        params = [
-          @ref_name,
-        ]
+        query = "SELECT get_reference($1::text);"
+        params = [ @ref_name ]
         @connection.exec_params(query, params) do |result|
           result.each do |row|
             @fields << { name: row.values_at('name')[0], type: row.values_at('type')[0] }
@@ -50,6 +44,12 @@ module Metadata
         raise GettingReferenceException.new(
           "Error while reference getting. Message: #{e.message}"
         )
+      end
+
+      def delete
+        query = "CALL delete_reference($1::text);"
+        params = [ @ref_name ]
+        @connection.exec_params(query, params) 
       end
     end
 

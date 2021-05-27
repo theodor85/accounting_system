@@ -36,6 +36,16 @@ RSpec.describe 'Reference testing: ' do
       expect(ref1.fields[2]['name']).to    eq(ref2.fields[2]['name'])
       expect(ref1.fields[2]['type']).to    eq(ref2.fields[2]['type'])
     end
+
+    it 'can delete reference' do
+      ref1 = ::Metadata::References::Reference.new('test delete ref', @connection)
+      ref1.add_field(name: 'customer', type: 'string')
+      ref1.create
+
+      ref1.delete
+
+      expect { ref1.fetch }.to raise_error(::Metadata::References::GettingReferenceException)
+    end
   end
 
   describe 'stored procedures testing:' do
