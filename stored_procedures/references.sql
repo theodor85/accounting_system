@@ -135,3 +135,27 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
+CREATE TYPE field AS (
+  name varchar,
+  type varchar
+);
+
+
+CREATE OR REPLACE FUNCTION GET_REFERENCE(reference_name text) RETURNS SETOF field AS $$
+BEGIN
+  RETURN QUERY
+  SELECT f.name, f.type
+  FROM md_refs_fields as f,
+       md_refs        as r
+  WHERE f.ref = r.id and r.ref_name = reference_name;
+
+  IF NOT FOUND THEN
+      RAISE EXCEPTION 'No reference named %s', $1;
+  END IF;
+
+  RETURN;
+END;
+$$
+LANGUAGE plpgsql;

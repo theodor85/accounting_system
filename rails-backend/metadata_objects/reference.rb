@@ -6,6 +6,9 @@ module Metadata
   module References
     # Working with references
     class Reference
+      attr_reader :ref_name
+      attr_reader :fields
+
       def initialize(ref_name, connection)
         @ref_name = ref_name.downcase
         @connection = connection
@@ -30,10 +33,34 @@ module Metadata
       def add_field(name:, type:)
         @fields << { name: name, type: type }
       end
+
+      def fetch
+        query = "
+          SELECT get_reference($1::text);
+        "
+        params = [
+          @ref_name,
+        ]
+        @connection.exec_params(query, params) do |result|
+          result.each do |row|
+            @fields << { name: row.values_at('name')[0], type: row.values_at('type')[0] }
+          end
+        end
+      rescue PG::RaiseException => e
+        raise GettingReferenceException.new(
+          "Error while reference getting. Message: #{e.message}"
+        )
+      end
     end
 
     class CreatingReferenceException < StandardError
       def initialize(msg="Error while reference creating")
+        super
+      end
+    end
+
+    class GettingReferenceException < StandardError
+      def initialize(msg="Error while reference getting")
         super
       end
     end

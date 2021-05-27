@@ -19,7 +19,6 @@ RSpec.describe 'Reference testing: ' do
 
   describe ::Metadata::References::Reference do
     it 'can create reference and fetch metadata' do
-      
       ref1 = ::Metadata::References::Reference.new(REF_NAME, @connection)
       ref1.add_field(name: 'customer', type: 'string')
       ref1.add_field(name: 'amount', type: 'number')
@@ -27,7 +26,7 @@ RSpec.describe 'Reference testing: ' do
       ref1.create
   
       ref2 = ::Metadata::References::Reference.new(REF_NAME, @connection)
-      ref2.refresh
+      ref2.fetch
   
       expect(ref1.ref_name).to             eq(ref2.ref_name)
       expect(ref1.fields[0]['name']).to    eq(ref2.fields[0]['name'])
