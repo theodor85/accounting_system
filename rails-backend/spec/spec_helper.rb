@@ -13,6 +13,39 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require 'capybara/rspec'
+require 'selenium/webdriver'
+
+# https://github.com/SeleniumHQ/selenium/issues/9001#issuecomment-752735600
+module Selenium
+  module WebDriver
+    module Remote
+      class Bridge
+        class << self
+          alias_method :original_handshake, :handshake
+
+          def handshake(opts = {})
+            original_handshake(**opts)
+          end
+        end
+      end
+    end
+  end
+end
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app,
+    :browser => :remote,
+    :desired_capabilities => :chrome,
+    :url => "http://chrome:4444/wd/hub"
+  )
+ end
+
+Capybara.javascript_driver = :chrome
+Capybara.default_driver = :chrome
+Capybara.server = :puma
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

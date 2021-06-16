@@ -30,6 +30,14 @@ services:
     ports:
       - "5432:5432"
 
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+
   # redis:
   #   image: redis:6.2.1
   #   ports:

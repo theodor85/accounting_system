@@ -68,4 +68,5 @@ RSpec.configure do |config|
   config.include DatabaseHelper
   config.include StoredProcHelper
   config.include ReferenceHelper
+  config.include Capybara::DSL
 end

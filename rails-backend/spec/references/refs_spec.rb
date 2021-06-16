@@ -5,7 +5,7 @@ require './database_classes/connection'
 
 RSpec.describe 'Reference testing: ' do
 
-  REF_NAME = 'Test reference'
+  ref_name = 'Test reference'
 
   before(:all) do
     create_test_database()
@@ -19,13 +19,13 @@ RSpec.describe 'Reference testing: ' do
 
   describe ::Metadata::References::Reference do
     it 'can create reference and fetch metadata' do
-      ref1 = ::Metadata::References::Reference.new(REF_NAME, @connection)
+      ref1 = ::Metadata::References::Reference.new(ref_name, @connection)
       ref1.add_field(name: 'customer', type: 'string')
       ref1.add_field(name: 'amount', type: 'number')
       ref1.add_field(name: 'description', type: 'text')
       ref1.create
   
-      ref2 = ::Metadata::References::Reference.new(REF_NAME, @connection)
+      ref2 = ::Metadata::References::Reference.new(ref_name, @connection)
       ref2.fetch
   
       expect(ref1.ref_name).to             eq(ref2.ref_name)
