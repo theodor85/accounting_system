@@ -18,3 +18,7 @@
 body {
     padding: 10px;
 }
+
+label {
+    font-size:x-large;
+}
