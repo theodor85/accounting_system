@@ -9,7 +9,10 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
 import 'materialize-css/dist/js/materialize'
+import "../src/configurator"
 
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+import "controllers"
