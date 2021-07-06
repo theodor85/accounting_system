@@ -38,7 +38,7 @@ services:
     ports:
       - "4444:4444"
 
-  # redis:
-  #   image: redis:6.2.1
-  #   ports:
-  #     - "6379:6379"
+  redis:
+    image: redis:6.2.1
+    ports:
+      - "6379:6379"
