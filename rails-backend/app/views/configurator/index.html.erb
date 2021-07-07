@@ -6,7 +6,13 @@
     id="add_ref"
     class="waves-effect waves-light btn"
     data-reflex="click->NewRefForm#get"
-  >Добавить справочник</button>
-
+    data-reject="<%= @reject %>"
+  >
+    <% if @button_text %>
+      <%= @button_text %>
+    <% else %>
+      Добавить справочник
+    <% end %>
+  </button>
   <div id="container_for_new"><%= @new_ref_form %></div>
 </div>
