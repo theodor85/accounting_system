@@ -1,14 +1,14 @@
 class NewRefFormReflex < ApplicationReflex
-  def get
-    @reject = ActiveModel::Type::Boolean.new.cast(element.dataset[:reject])
+  def get(reject)
+    @reject = ActiveModel::Type::Boolean.new.cast(reject)
     if @reject
-      @button_text = 'Добавить справочник'
-      @new_ref_form = ''
-      @reject = false
+      session[:button_text] = 'Добавить справочник'
+      session[:new_ref_form] = ''
+      session[:reject] = false
     else
-      @button_text = 'Отменить добавление'
-      @new_ref_form = render partial: 'new_ref'
-      @reject = true
+      session[:button_text] = 'Отменить добавление'
+      session[:new_ref_form] = render partial: 'new_ref'
+      session[:reject] = true
     end
   end
 end

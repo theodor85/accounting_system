@@ -35,7 +35,7 @@ export default class extends Controller {
    */
 
   beforeReflex (element, reflex, noop, reflexId) {
-    // document.body.classList.add('wait')
+    console.log('Global beforeReflex')
   }
 
   reflexSuccess (element, reflex, noop, reflexId) {
