@@ -1,4 +1,5 @@
 import ApplicationController from './application_controller.js'
+import initMaterialize from '../src/init.js'
 
 export default class extends ApplicationController {
   
@@ -10,6 +11,6 @@ export default class extends ApplicationController {
 
   afterGet(element, reflex, noop, reflexId) {
     console.log('Local after', reflexId)
-    M.FormSelect.init(document.querySelectorAll('select'), {});
+    initMaterialize()
   }
 }

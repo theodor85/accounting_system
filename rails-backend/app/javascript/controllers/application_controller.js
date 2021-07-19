@@ -52,6 +52,7 @@ export default class extends Controller {
 
   afterReflex (element, reflex, noop, reflexId) {
     // document.body.classList.remove('wait')
+    console.log('Global afterReflex')
   }
 
   finalizeReflex (element, reflex, noop, reflexId) {
