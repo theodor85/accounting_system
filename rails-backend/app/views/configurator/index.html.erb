@@ -1,20 +1,10 @@
-<div class="container">
-  <h1>Конфигуратор</h1>
-  <h2>Справочники</h2>
+<h1>Конфигуратор</h1>
+<h2>Справочники</h2>
 
-  <button
-    id="add_ref"
-    class="waves-effect waves-light btn"
-    data-controller="newrefform"
-    data-action="click->newrefform#get"
-    data-reject="<%= @reject %>"
-  >
-    <% if @button_text %>
-      <%= @button_text %>
-    <% else %>
-      Добавить справочник
-    <% end %>
-  </button>
-
-  <div id="container_for_new"><%= @new_ref_form %></div>
-</div>
+<a
+  id="add_ref"
+  class="waves-effect waves-light btn"
+  href="/conf/refs/add"
+>
+    Добавить справочник
+</a>

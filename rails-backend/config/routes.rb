@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   get "/app", to: "app#index"
 
   get "/conf", to: "configurator#index"
-  get "/conf/new_ref", to: "configurator#new_ref"
+  get "/conf/refs/add", to: "reference#new"
+  post "/conf/refs", to: "reference#create"
 end
