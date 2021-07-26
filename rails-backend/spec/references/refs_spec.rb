@@ -1,21 +1,10 @@
 require 'rails_helper'
 require './metadata_objects/reference'
 require './database_classes/table'
-require './database_classes/connection'
 
 RSpec.describe 'Reference testing: ' do
 
   ref_name = 'Test reference'
-
-  before(:all) do
-    create_test_database()
-    @connection = ::Database::Connection.new.get_test_connection
-  end
-
-  after(:all) do
-    @connection.close
-    remove_test_database()
-  end
 
   describe ::Metadata::References::Reference do
     it 'can create reference and fetch metadata' do

@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'helpers/database_helper'
 require 'helpers/stored_proc_helper'
 require 'helpers/reference_helper'
+require 'helpers/common_helper'
 
 ENV['RAILS_ENV'] ||= 'test'
 
@@ -68,5 +69,16 @@ RSpec.configure do |config|
   config.include DatabaseHelper
   config.include StoredProcHelper
   config.include ReferenceHelper
+  config.include CommonHelper
   config.include Capybara::DSL
+
+  config.before(:all) do
+    create_test_database()
+    @connection = ::Database::Connection.new.get_test_connection
+  end
+
+  config.after(:all) do
+    @connection.close
+    remove_test_database()
+  end
 end
