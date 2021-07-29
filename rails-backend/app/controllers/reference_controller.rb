@@ -1,7 +1,11 @@
+require '/app/metadata_objects/types'
+
+
 class ReferenceController < ApplicationController
   def new
-    @types_list = ['qwe', 'zxc', '123']
+    @types_list = ::Metadata::Types.get_types_list
   end
+
   def create
   end
 end
