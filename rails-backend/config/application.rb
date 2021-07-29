@@ -1,6 +1,8 @@
 require_relative "boot"
 
 require "rails/all"
+require "connection_pool"
+require "pg"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -18,5 +20,14 @@ module RailsBackend
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.connection_pool = ConnectionPool.new(size: 5, timeout: 5) do 
+      PG.connect(
+        dbname: ENV['POSTGRES_DB'],
+        user: ENV['POSTGRES_USER'],
+        password: ENV['POSTGRES_PASSWORD'],
+        host: ENV['POSTGRES_HOST'],
+      )
+    end
   end
 end

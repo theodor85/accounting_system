@@ -1,6 +1,13 @@
+require '/app/database_classes/connection'
+
+
 module Metadata
   module Types
-    def self.get_types_list(connection)
+    def self.get_types_list(connection = nil)
+      unless connection
+        connection = ::Database::ConnectionPool.new.get_connection_from_pool
+      end
+
       types_list = []
 
       query = "SELECT get_types_list();"
