@@ -27,7 +27,8 @@ RSpec.describe 'References on user interface testing: ', type: :feature, js: tru
       fill_in 'field_name', :with => 'customer'
     end
     within(:xpath, "//table/tbody/tr[1]/td[2]") do
-      select 'string', from: 'field_type', visible: :all
+      find(:xpath, "//input[@class='select-dropdown dropdown-trigger']").click
+      find(:xpath, "//span[text()[contains(.,'string')]]").click
     end
     within(:xpath, "//table/tbody/tr[1]/td[3]") do
       click_button 'add_field'
@@ -37,7 +38,8 @@ RSpec.describe 'References on user interface testing: ', type: :feature, js: tru
       fill_in 'field_name', :with => 'amount'
     end
     within(:xpath, "//table/tbody/tr[1]/td[2]") do
-      select 'number', from: 'field_type', visible: :all
+      find(:xpath, "//input[@class='select-dropdown dropdown-trigger']").click
+      find(:xpath, "//span[text()[contains(.,'number')]]").click
     end
     within(:xpath, "//table/tbody/tr[2]/td[3]") do
       click_button 'add_field'
@@ -47,7 +49,8 @@ RSpec.describe 'References on user interface testing: ', type: :feature, js: tru
       fill_in 'field_name', :with => 'description'
     end
     within(:xpath, "//table/tbody/tr[1]/td[2]") do
-      select 'text', from: 'field_type', visible: :all
+      find(:xpath, "//input[@class='select-dropdown dropdown-trigger']").click
+      find(:xpath, "//span[text()[contains(.,'number')]]").click
     end
 
     page.click_button 'Сохранить'
