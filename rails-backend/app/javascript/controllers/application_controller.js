@@ -1,6 +1,8 @@
 import { Controller } from 'stimulus'
 import StimulusReflex from 'stimulus_reflex'
 
+import initMaterilize from '../src/init'
+
 /* This is your ApplicationController.
  * All StimulusReflex controllers should inherit from this class.
  *
@@ -53,6 +55,7 @@ export default class extends Controller {
   afterReflex (element, reflex, noop, reflexId) {
     // document.body.classList.remove('wait')
     console.log('Global afterReflex')
+    initMaterilize()
   }
 
   finalizeReflex (element, reflex, noop, reflexId) {

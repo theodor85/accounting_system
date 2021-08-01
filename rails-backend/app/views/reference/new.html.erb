@@ -1,10 +1,10 @@
 <h1>Новый справочник</h1>
 
-<form method="POST" action="/conf/refs">
+<form method="POST" action="/conf/refs" data-controller="reference">
   <label for="ref_name">Имя справочника:</label>
-  <input id="ref_name" type="text" />
+  <input id="ref_name" type="text" data-reference-target="name" value="<%= @ref_name %>" />
 
-  <table>
+  <table id="fields_table">
     <thead>
       <tr>
         <th>Имя поля</th>
@@ -13,32 +13,71 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><input name="field_name" type="text" /></td>
-        <td>
-          <div class="input-field col s12">
-            <select name="field_type">
-              <option value="0" disabled selected>Выберите тип</option>
+        <tr>
+          <%= @fields %>
+        </tr>
+      <% @fields.each_with_index do |field, index| %>
 
-              <% for type in @types_list %>
-                <option value="<%= type %>"><%= type %></option>
-              <% end %>
-            </select>
-          </div>
-        </td>
+        <tr>
+          <td><input name="field_name" type="text" value="<%= field[:name] %>"/></td>
+          <td>
+            <div class="input-field col s12">
+              <select name="field_type">
+                
+                <% if field[:type] %>
+                  <% for type in @types_list %>
+                    <% if field[:type] == type %>
+                      <option value="<%= type %>" selected><%= type %></option>
+                    <% else %>
+                      <option value="<%= type %>"><%= type %></option>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <option value="0" disabled selected>Выберите тип</option>
+                  <% for type in @types_list %>
+                    <option value="<%= type %>"><%= type %></option>
+                  <% end %>
+                <% end %>
+
+              </select>
+            </div>
+          </td>
+          <td>
+
+            <button
+              name="remove_field"
+              class="btn-floating btn-small waves-effect waves-light red"
+              title="Удалить поле"
+              type="button"
+              
+              data-action="click->reference#remove_field"
+              data-index="<%= index %>"
+              data-reflex-root="#fields_table"
+            >
+              <i class="material-icons">remove</i>
+            </button>
+
+          </td>
+        </tr>
+      <% end %>
+
+      <tr>
+        <td></td>
+        <td></td>
         <td>
           <button
             name="add_field"
             class="btn-floating btn-small waves-effect waves-light green"
             title="Добавить поле"
             type="button"
-            data-controller="newref"
-            data-action="click->newref#newfield"
+            data-action="click->reference#new_field"
+            data-reflex-root="#fields_table"
           >
             <i class="material-icons">add</i>
           </button>
         </td>
       </tr>
+
     </tbody>
   </table>
 
