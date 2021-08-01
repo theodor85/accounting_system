@@ -26,7 +26,18 @@
             </select>
           </div>
         </td>
-        <td>...</td>
+        <td>
+          <button
+            name="add_field"
+            class="btn-floating btn-small waves-effect waves-light green"
+            title="Добавить поле"
+            type="button"
+            data-controller="newref"
+            data-action="click->newref#newfield"
+          >
+            <i class="material-icons">add</i>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
