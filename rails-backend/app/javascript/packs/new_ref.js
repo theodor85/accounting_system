@@ -1,3 +1,1 @@
-import initMaterialize from '../src/init'
-
-initMaterialize()
+window.createVueApp('#fields_table');

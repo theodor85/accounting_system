@@ -9,9 +9,23 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
 import 'materialize-css/dist/js/materialize'
+import Vue from 'vue';
 
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 
 import "controllers"
+import { createVueApp } from '../src/vue_helper';
+
+window.createVueApp = createVueApp;
+
+
+// register vue components
+const requireComponents = require.context(
+  '../src/components',
+  true,
+);
+
+Vue.component('fields-table', requireComponents('./FieldsTable.vue').default);
+// console.log('asd  ');
