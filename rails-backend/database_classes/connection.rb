@@ -23,12 +23,4 @@ module Database
       @test_connection
     end
   end
-
-  class ConnectionPool
-    def get_connection_from_pool
-      Rails.configuration.connection_pool.with do |conn|
-        conn
-      end
-    end
-  end
 end

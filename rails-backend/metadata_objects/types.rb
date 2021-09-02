@@ -4,10 +4,18 @@ require '/app/database_classes/connection'
 module Metadata
   module Types
     def self.get_types_list(connection = nil)
-      unless connection
-        connection = ::Database::ConnectionPool.new.get_connection_from_pool
+      if connection
+        get_types_list_from_db(connection)
+      else
+        Rails.configuration.connection_pool.with do |conn|
+          get_types_list_from_db(conn)
+        end
       end
+    end
 
+    private
+
+    def self.get_types_list_from_db(connection)
       types_list = []
 
       query = "SELECT get_types_list();"

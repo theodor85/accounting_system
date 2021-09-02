@@ -21,7 +21,7 @@ module RailsBackend
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.connection_pool = ConnectionPool.new(size: 5, timeout: 5) do 
+    config.connection_pool = ConnectionPool.new(size: 5, timeout: 5) do
       PG.connect(
         dbname: ENV['POSTGRES_DB'],
         user: ENV['POSTGRES_USER'],

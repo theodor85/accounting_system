@@ -1,4 +1,5 @@
 require '/app/metadata_objects/types'
+require '/app/metadata_objects/reference'
 
 
 class ReferenceController < ApplicationController
@@ -9,6 +10,6 @@ class ReferenceController < ApplicationController
 
   def create
     puts params
-    
+
   end
 end
