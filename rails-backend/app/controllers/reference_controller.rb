@@ -8,5 +8,7 @@ class ReferenceController < ApplicationController
   end
 
   def create
+    puts params
+    
   end
 end

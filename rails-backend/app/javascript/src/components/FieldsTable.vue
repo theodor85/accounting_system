@@ -9,10 +9,10 @@
     </thead>
     <tbody>
       <tr v-for="(field, index) in fields" :key="index">
-        <td><input name="field_name" type="text" v-model="field.name"/></td>
+        <td><input :name="'field_name_' + index" type="text" v-model="field.name"/></td>
         <td>
           <div class="input-field col s12">
-            <select name="field_type" @change="onTypeSelect($event, index)">
+            <select :name="'field_type_' + index" @change="onTypeSelect($event, index)">
               <option v-for="type in typesList" :selected="field.type==type" :key="type" :value="type">
                 {{ type }}
               </option>

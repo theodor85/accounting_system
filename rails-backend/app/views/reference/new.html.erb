@@ -1,13 +1,22 @@
-<h1>Новый справочник</h1>
+<div class="row">
+  <div class="col l6">
+    <h1>Новый справочник</h1>
 
-<form method="POST" action="/conf/refs">
-  <label for="ref_name">Имя справочника:</label>
-  <input id="ref_name" type="text" />
+    <form method="POST" action="/conf/refs">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <label for="ref_name">Имя справочника:</label>
+      <input id="ref_name" name="ref_name" type="text" />
 
-  <div id="fields_table">
-    <fields-table types="<%= @types_list %>"/>
+      <div id="fields_table">
+        <fields-table types="<%= @types_list %>"/>
+      </div>
+
+      <br>
+      <button type="submit" class="btn waves-effect waves-light">
+        Create <i class="material-icons right">send</i>
+      </button>
+    </form>
+
+    <%= javascript_pack_tag 'new_ref', 'data-turbolinks-track': 'reload' %>
   </div>
-
-</form>
-
-<%= javascript_pack_tag 'new_ref', 'data-turbolinks-track': 'reload' %>
+</div>
