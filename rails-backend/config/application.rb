@@ -3,6 +3,7 @@ require_relative "boot"
 require "rails/all"
 require "connection_pool"
 require "pg"
+require_relative "middlewares"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -29,5 +30,7 @@ module RailsBackend
         host: ENV['POSTGRES_HOST'],
       )
     end
+
+    config.middleware.use ::AccSysMiddlewares::ConnectionMiddleware
   end
 end

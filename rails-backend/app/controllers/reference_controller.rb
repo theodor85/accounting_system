@@ -11,5 +11,7 @@ class ReferenceController < ApplicationController
   def create
     puts params
 
+    ref1 = ::Metadata::References::Reference.new(params['ref_name'])
+    ref1.create
   end
 end
