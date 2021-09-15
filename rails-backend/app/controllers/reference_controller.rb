@@ -9,9 +9,29 @@ class ReferenceController < ApplicationController
   end
 
   def create
-    puts params
+    fields = get_fields_from_params(params)
 
-    ref1 = ::Metadata::References::Reference.new(params['ref_name'])
-    ref1.create
+    ref = ::Metadata::References::Reference.new(params['ref_name'])
+    fields.each do |field |
+      ref.add_field(**field)
+    end
+    ref.create
+
+    redirect_to conf_path
+  rescue ::Metadata::References::CreatingReferenceException => e
+    flash.alert = e.message
+    redirect_to conf_refs_add_path
+  end
+
+  def get_fields_from_params(params)
+    fields = []
+    params.each_pair do |key, value|
+      if key[0..9] == 'field_name'
+        index = key[10..11]
+        puts index
+        fields << {:name => value, :type => params['field_type' + index]}
+      end
+    end
+    fields
   end
 end
