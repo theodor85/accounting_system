@@ -4,7 +4,7 @@ require '/app/metadata_objects/reference'
 
 class ReferenceController < ApplicationController
   def new
-    @types_list = session[:types_list] || ::Metadata::Types.get_types_list
+    @types_list = session[:types_list] || ::Metadata::Types.new.get_types_list
     session[:types_list] = @types_list
   end
 
@@ -28,7 +28,6 @@ class ReferenceController < ApplicationController
     params.each_pair do |key, value|
       if key[0..9] == 'field_name'
         index = key[10..11]
-        puts index
         fields << {:name => value, :type => params['field_type' + index]}
       end
     end

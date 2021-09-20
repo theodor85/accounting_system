@@ -2,24 +2,20 @@ require '/app/database_classes/connection'
 
 
 module Metadata
-  module Types
-    def self.get_types_list(connection = nil)
-      if connection
+  class Types
+    include Dry::Effects.Reader(:connection)
+
+    def get_types_list
         get_types_list_from_db(connection)
-      else
-        Rails.configuration.connection_pool.with do |conn|
-          get_types_list_from_db(conn)
-        end
-      end
     end
 
     private
 
-    def self.get_types_list_from_db(connection)
+    def get_types_list_from_db(conn)
       types_list = []
 
       query = "SELECT get_types_list();"
-      connection.exec(query) do |result|
+      conn.exec(query) do |result|
         result.each do |row|
           types_list << row.values_at('get_types_list')[0]
         end
@@ -30,11 +26,11 @@ module Metadata
         "Error while types list getting. Message: #{e.message}"
       )
     end
+  end
 
-    class GettingTypesListException< StandardError
-      def initialize(msg="Error while types list getting")
-        super
-      end
+  class GettingTypesListException < StandardError
+    def initialize(msg="Error while types list getting")
+      super
     end
   end
 end
