@@ -11,7 +11,7 @@ module ReferenceHelper
       WHERE ref_name like '#{ref_name}';
     "
     answer = false
-    @connection.exec(query) do |result|
+    connection.exec(query) do |result|
       answer = result[0].values_at('count')[0].to_i >= 1
     end
 
@@ -33,7 +33,7 @@ module ReferenceHelper
 
     sorted_fields = fields.sort{|a, b| a[:name] <=> b[:name]}
 
-    answer = @connection.exec(query) do |result|
+    answer = connection.exec(query) do |result|
       sorted_fields.each_with_index.all? do |field, i|
         result[i].values_at('ref_name')[0] == ref_name &&
           field[:name] == result[i].values_at('name')[0] &&
@@ -53,7 +53,7 @@ module ReferenceHelper
       FROM md_refs
       WHERE ref_name = '#{ref_name}';
     "
-    table_name = @connection.exec(query) do |result|
+    table_name = connection.exec(query) do |result|
       result[0].values_at('table_name')[0]
     end
   end

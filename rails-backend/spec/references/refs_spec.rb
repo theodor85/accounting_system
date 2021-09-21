@@ -8,13 +8,13 @@ RSpec.describe 'Reference testing: ' do
 
   describe ::Metadata::References::Reference do
     it 'can create reference and fetch metadata' do
-      ref1 = ::Metadata::References::Reference.new(ref_name, @connection)
+      ref1 = ::Metadata::References::Reference.new(ref_name)
       ref1.add_field(name: 'customer', type: 'string')
       ref1.add_field(name: 'amount', type: 'number')
       ref1.add_field(name: 'description', type: 'text')
       ref1.create
   
-      ref2 = ::Metadata::References::Reference.new(ref_name, @connection)
+      ref2 = ::Metadata::References::Reference.new(ref_name)
       ref2.fetch
   
       expect(ref1.ref_name).to             eq(ref2.ref_name)
@@ -27,7 +27,7 @@ RSpec.describe 'Reference testing: ' do
     end
 
     it 'can delete reference' do
-      ref1 = ::Metadata::References::Reference.new('test delete ref', @connection)
+      ref1 = ::Metadata::References::Reference.new('test delete ref')
       ref1.add_field(name: 'customer', type: 'string')
       ref1.create
 
@@ -56,7 +56,7 @@ RSpec.describe 'Reference testing: ' do
       expect(is_fields_in_md_refs_fields?(ref_name, fields)).to  be true
 
       # добавлена таблица c нужными полями?
-      table = ::Database::Table.new(get_ref_table_name(ref_name), @connection)
+      table = ::Database::Table.new(get_ref_table_name(ref_name))
       expect(table.exists?).to                       be true
       expect(table.has_column?('customer')).to       be true
       expect(table.has_column?('amount')).to         be true

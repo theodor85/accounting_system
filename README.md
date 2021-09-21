@@ -13,6 +13,7 @@
 При запущенной системе выполнить:
 
     docker-compose exec rails rspec ./spec/references/refs_spec.rb
+    docker-compose exec rails rspec ./spec/common/types_spec.rb
 
 Запуск end-to-end тестов:
 

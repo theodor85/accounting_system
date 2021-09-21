@@ -1,4 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'dry/effects'
+
 require 'spec_helper'
 require 'helpers/database_helper'
 require 'helpers/stored_proc_helper'
@@ -74,11 +76,19 @@ RSpec.configure do |config|
 
   config.before(:all) do
     create_test_database()
-    @connection = ::Database::Connection.new.get_test_connection
   end
 
   config.after(:all) do
-    @connection.close
     remove_test_database()
+  end
+
+  connection_provider = Object.new.extend(Dry::Effects::Handler.Reader(:connection, as: :call))
+
+  RSpec.configure do |config|
+    config.around(:each) do |ex|
+      connection = ::Database::Connection.new.get_test_connection
+      connection_provider.call(connection, &ex)
+      connection.close
+    end
   end
 end
