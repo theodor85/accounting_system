@@ -23,6 +23,8 @@ class ReferenceController < ApplicationController
     redirect_to conf_refs_add_path
   end
 
+  private
+
   def get_fields_from_params(params)
     fields = []
     params.each_pair do |key, value|
