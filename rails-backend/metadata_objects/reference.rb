@@ -54,6 +54,26 @@ module Metadata
       end
     end
 
+    class ReferencesList
+      include Dry::Effects.Reader(:connection)
+
+      def fetch
+        ref_list = []
+
+        query = "SELECT get_references_list();"
+        connection.exec(query) do |result|
+          result.each do |row|
+            ref_list << Reference.new(row.values_at('get_references_list')[0])
+          end
+        end
+        ref_list
+      rescue PG::RaiseException => e
+        raise FetchingReferencesListException.new(
+          "Error while fething references list from database. Message: #{e.message}"
+        )
+      end
+    end
+
     class CreatingReferenceException < StandardError
       def initialize(msg="Error while reference creating")
         super
@@ -62,6 +82,12 @@ module Metadata
 
     class GettingReferenceException < StandardError
       def initialize(msg="Error while reference getting")
+        super
+      end
+    end
+
+    class FetchingReferencesListException < StandardError
+      def initialize(msg="Error while fething references list from database")
         super
       end
     end

@@ -3,7 +3,6 @@ require 'dry/effects'
 
 require 'spec_helper'
 require 'helpers/database_helper'
-require 'helpers/stored_proc_helper'
 require 'helpers/reference_helper'
 require 'helpers/common_helper'
 
@@ -69,7 +68,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include DatabaseHelper
-  config.include StoredProcHelper
   config.include ReferenceHelper
   config.include CommonHelper
   config.include Capybara::DSL
@@ -87,7 +85,11 @@ RSpec.configure do |config|
   RSpec.configure do |config|
     config.around(:each) do |ex|
       connection = ::Database::Connection.new.get_test_connection
+      connection.exec("BEGIN")
+
       connection_provider.call(connection, &ex)
+
+      connection.exec("ROLLBACK")
       connection.close
     end
   end
