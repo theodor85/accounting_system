@@ -138,21 +138,41 @@ LANGUAGE plpgsql;
 
 
 CREATE TYPE field AS (
-  name varchar,
-  type varchar
+  ref_id    int,
+  ref_name  text,
+  name      varchar,
+  type      varchar
 );
 
 
-CREATE OR REPLACE FUNCTION GET_REFERENCE(reference_name text) RETURNS SETOF field AS $$
+CREATE OR REPLACE FUNCTION GET_REFERENCE_BY_NAME(reference_name text) RETURNS SETOF field AS $$
 BEGIN
   RETURN QUERY
-  SELECT f.name, f.type
+  SELECT r.id, r.ref_name, f.name, f.type
   FROM md_refs_fields as f,
        md_refs        as r
   WHERE f.ref = r.id and r.ref_name = reference_name;
 
   IF NOT FOUND THEN
-      RAISE EXCEPTION 'No reference named %s', $1;
+      RAISE EXCEPTION 'No reference named "%s"', $1;
+  END IF;
+
+  RETURN;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION GET_REFERENCE_BY_ID(reference_id int) RETURNS SETOF field AS $$
+BEGIN
+  RETURN QUERY
+  SELECT r.id, r.ref_name, f.name, f.type
+  FROM md_refs_fields as f,
+       md_refs        as r
+  WHERE f.ref = r.id and r.id = reference_id;
+
+  IF NOT FOUND THEN
+      RAISE EXCEPTION 'No reference with id = %s', $1;
   END IF;
 
   RETURN;

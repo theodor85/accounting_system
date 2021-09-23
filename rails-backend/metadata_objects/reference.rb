@@ -8,12 +8,18 @@ module Metadata
     class Reference
       include Dry::Effects.Reader(:connection)
 
-      attr_reader :ref_name
+      attr_accessor :ref_name
+      attr_reader :ref_id
       attr_reader :fields
 
-      def initialize(ref_name)
-        @ref_name = ref_name.downcase
+      def initialize
+        @ref_name = nil
+        @ref_id = nil
         @fields = []
+      end
+
+      def add_field(name:, type:)
+        @fields << { name: name, type: type }
       end
 
       def create
@@ -23,22 +29,46 @@ module Metadata
           @fields.to_json
         ]
         connection.exec_params(query, params)
+
+        fetch_by_name
       rescue PG::RaiseException => e
         raise CreatingReferenceException.new(
           "Error while reference creating. Message: #{e.message}"
         )
       end
 
-      def add_field(name:, type:)
-        @fields << { name: name, type: type }
+      def find_by_name(ref_name)
+        @ref_name = ref_name
+        fetch_by_name
       end
 
-      def fetch
-        query = "SELECT get_reference($1::text);"
+      def find_by_id(ref_id)
+        @ref_id = ref_id
+        fetch_by_id
+      end
+
+      def delete
+        query = "CALL delete_reference($1::text);"
         params = [ @ref_name ]
+        connection.exec_params(query, params) 
+      end
+
+      private
+
+      def fetch_by_name
+        query = "SELECT get_reference_by_name($1::text);"
+        params = [ @ref_name ]
+
+        @fields.clear
+
         connection.exec_params(query, params) do |result|
+          @ref_id = result[0]['get_reference_by_name'][1..-2].split(',')[0].to_i
+          @ref_name = result[0]['get_reference_by_name'][1..-2].split(',')[1][1..-2]
           result.each do |row|
-            @fields << { name: row.values_at('name')[0], type: row.values_at('type')[0] }
+            @fields << {
+              name: row['get_reference_by_name'][1..-2].split(',')[2],
+              type: row['get_reference_by_name'][1..-2].split(',')[3]
+            }
           end
         end
       rescue PG::RaiseException => e
@@ -47,10 +77,26 @@ module Metadata
         )
       end
 
-      def delete
-        query = "CALL delete_reference($1::text);"
-        params = [ @ref_name ]
-        connection.exec_params(query, params) 
+      def fetch_by_id
+        query = "SELECT get_reference_by_id($1::int);"
+        params = [ @ref_id ]
+
+        @fields.clear
+
+        connection.exec_params(query, params) do |result|
+          @ref_id = result[0]['get_reference_by_id'][1..-2].split(',')[0].to_i
+          @ref_name = result[0]['get_reference_by_id'][1..-2].split(',')[1][1..-2]
+          result.each do |row|
+            @fields << {
+              name: row['get_reference_by_id'][1..-2].split(',')[2],
+              type: row['get_reference_by_id'][1..-2].split(',')[3]
+            }
+          end
+        end
+      rescue PG::RaiseException => e
+        raise GettingReferenceException.new(
+          "Error while reference getting. Message: #{e.message}"
+        )
       end
     end
 
@@ -63,7 +109,9 @@ module Metadata
         query = "SELECT get_references_list();"
         connection.exec(query) do |result|
           result.each do |row|
-            ref_list << Reference.new(row.values_at('get_references_list')[0])
+            ref = Reference.new
+            ref.find_by_name(row.values_at('get_references_list')[0])
+            ref_list << ref
           end
         end
         ref_list
